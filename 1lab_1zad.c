@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define MAXBODOVI 200
 
-/*Napisati program koji prvo proèita koliko redaka ima datoteka, tj. koliko ima studenata
-zapisanih u datoteci. Nakon toga potrebno je dinamièki alocirati prostor za niz struktura
-studenata (ime, prezime, bodovi) i uèitati iz datoteke sve zapise. Na ekran ispisati ime,
+/*Napisati program koji prvo pročita koliko redaka ima datoteka, tj. koliko ima studenata
+zapisanih u datoteci. Nakon toga potrebno je dinamički alocirati prostor za niz struktura
+studenata (ime, prezime, bodovi) i učitati iz datoteke sve zapise. Na ekran ispisati ime,
 prezime,apsolutni i relativni broj bodova.
 Napomena: Svaki redak datoteke sadrži ime i prezime studenta, te broj bodova na kolokviju.
 relatvan_br_bodova = br_bodova/max_br_bodova*100*/
@@ -21,6 +22,7 @@ int main()
 	int i = 0, brojac = 0;
 	char c;
 	_stud* studenti;
+	double relativni[50];
 
 	fp = fopen("studenti.txt", "r");	//otvaranje datoteke
 	if (fp == NULL) {
@@ -42,8 +44,10 @@ int main()
 		fscanf(fp, "%s %s %d", studenti[i].ime, studenti[i].prezime, &studenti[i].bodovi);	//upis podataka iz txt filea u strukturu
 		i++;	//iteriranje na sljedeci clan niza struktura
 	}
+
 	for (i = 0; i < brojac; i++) {
-		printf("%s %s %d\n", studenti[i].ime, studenti[i].prezime, studenti[i].bodovi);	//ispis podataka iz strukture
+		relativni[i] = (double)studenti[i].bodovi / MAXBODOVI * 100;	//izracun relativnog broja bodova od maksimalnih 200
+		printf("%s %s %d %.2lf\n", studenti[i].ime, studenti[i].prezime, studenti[i].bodovi, relativni[i]);	//ispis podataka iz strukture
 	}
 	fclose(fp);		//zatvaranje datoteke
 	return 0;
