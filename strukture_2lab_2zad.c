@@ -2,12 +2,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-/*Definirati strukturu osoba (ime, prezime, godina roğenja) i napisati program koji:
-a) dinamièki dodaje novi element na poèetak liste,
+/*Definirati strukturu osoba (ime, prezime, godina roÄ‘enja) i napisati program koji:
+a) dinamiÄki dodaje novi element na poÄetak liste,
 b) ispisuje listu,
-c) dinamièki dodaje novi element na kraj liste,
+c) dinamiÄki dodaje novi element na kraj liste,
 d) pronalazi element u listi (po prezimenu),
-e) briše odreğeni element iz liste,
+e) briÅ¡e odreÄ‘eni element iz liste,
 U zadatku se ne smiju koristiti globalne varijable*/
 
 struct osoba;
