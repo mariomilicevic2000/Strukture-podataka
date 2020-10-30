@@ -3,11 +3,11 @@
 #include <stdlib.h>
 
 /*Prethodnom zadatku dodati funkcije:
-a) dinamièki dodaje novi element iza odreğenog elementa,
-b) dinamièki dodaje novi element ispred odreğenog elementa,
+a) dinamiÄki dodaje novi element iza odreÄ‘enog elementa,
+b) dinamiÄki dodaje novi element ispred odreÄ‘enog elementa,
 c) sortira listu po prezimenima osoba,
 d) upisuje listu u datoteku,
-e) èita listu iz datoteke.*/
+e) Äita listu iz datoteke.*/
 
 struct osoba;
 typedef struct osoba* pozicija;
