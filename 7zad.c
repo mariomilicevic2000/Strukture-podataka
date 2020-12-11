@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-//Radna verzija s laba, nije gotovo
+//radna verzija s laba, nije gotovo
 
 struct node;
 typedef struct node* position;
@@ -15,7 +15,7 @@ int fileSize(FILE*);
 char* createExpression(FILE*);
 int evaluateExpression(char*);
 int push(position);
-int pop(position);
+position pop(position);
 
 int main()
 {
@@ -65,9 +65,29 @@ int evaluateExpression(char* expression){
 	
 }
 
-int push(position p, char* ){
+int push(position p, int num){
 	position temp;
 
 	temp = (position)malloc(sizeof(struct node));
+	temp->element = num;
+	temp->next = p->next;
+	p->next = temp;
 
+	return 0;
+}
+
+position pop(position p){
+	position temp;
+
+	if (p == NULL) {
+		printf("Stog je prazan!\n");
+		return -1;
+	}
+	else {
+		temp = p->next;
+		p->next = temp->next;
+		printf("Element %d je maknut sa stoga!\n", temp->element);
+		free(temp);
+	}
+	return temp;
 }
