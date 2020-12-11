@@ -7,7 +7,7 @@
 
 struct node;
 typedef struct node* position;
-struct node{
+struct node {
 	int num;
 	position next;
 };
@@ -20,32 +20,34 @@ position popQueue(position);
 int main()
 {
 	int i;
+	time_t t;
 	struct node head;
 	int numOfElements;
 	char choice = NULL;
 	head.next = NULL;
+	srand(time(&t));
 
 	printf("Koliko elemenata zelite u strukturi?\n");
 	scanf("%d", &numOfElements);
 
 	printf("Odaberite nacin rada:\ns za stog\nr za red\n");
-	scanf(" %d", choice);
-	switch(choice){
+	scanf(" %c", &choice);
+	switch (choice) {
 	case 's':
-		for(i = 0; i < numOfElements; i++){
+		for (i = 0; i < numOfElements; i++) {
 			push(&head);
+			printNodes(head.next);
 		}
-		printNodes(head.next);
-		for(i = 0; i < numOfElements; i++){
+		for (i = 0; i < numOfElements; i++) {
 			popStack(&head);
 		}
 		break;
 	case 'r':
-		for(i = 0; i < numOfElements; i++){
+		for (i = 0; i < numOfElements; i++) {
 			push(&head);
+			printNodes(head.next);
 		}
-		printNodes(head.next);
-		for(i = 0; i < numOfElements; i++){
+		for (i = 0; i < numOfElements; i++) {
 			popQueue(&head);
 		}
 		break;
@@ -53,14 +55,14 @@ int main()
 	return 0;
 }
 
-int printNodes(position p){
-	if(p == NULL){
+int printNodes(position p) {
+	if (p == NULL) {
 		printf("Struktura je prazna!");
 		return -1;
 	}
-	else{
+	else {
 		printf("U strukturi se nalaze elementi:\n");
-		while(p != NULL){
+		while (p != NULL) {
 			printf("%d\n", p->num);
 			p = p->next;
 		}
@@ -68,33 +70,31 @@ int printNodes(position p){
 	return 0;
 }
 
-int push(position p){
+int push(position p) {
 	position temp;
 	int lowerLimit, upperLimit;
-	time_t t;
 	lowerLimit = 10;
 	upperLimit = 100;
-	srand(time(&t));
 
 	temp = (position)malloc(sizeof(struct node));
 
-	printf("Dodaje se novi nasumicni element od %d do %d:\n", lowerLimit, upperLimit);
-	temp->num = lowerLimit + (rand())%(upperLimit - lowerLimit);
+	printf("Dodaje se novi nasumicni element od %d do %d\n", lowerLimit, upperLimit);
+	temp->num = lowerLimit + (rand()) % (upperLimit - lowerLimit);
 	temp->next = p->next;
 	p->next = temp;
 
 	return 0;
 }
 
-position popStack(position p){
+position popStack(position p) {
 	position temp;
 
-	if(p == NULL){
+	if (p == NULL) {
 		printf("Stog je prazan!\n");
 		return NULL;
 	}
-	else{  
-        temp = p->next;
+	else {
+		temp = p->next;
 		p->next = temp->next;
 		printf("Element %d je izbrisan!\n", temp->num);
 		free(temp);
@@ -102,22 +102,22 @@ position popStack(position p){
 	return temp;
 }
 
-position popQueue(position p){
-	position temp;
-	temp->next = NULL;
+position popQueue(position p) {
+	position temp, prev;
 
-	if(p == NULL){
+	if (p == NULL) {
 		printf("Red je prazan!\n");
 		return NULL;
 	}
-	else{
-		while(p->next != NULL){
+	else {
+		while (p->next != NULL) {
+			prev = p;
 			p = p->next;
 		}
-		temp = p;
-		p->next = temp->next;
-		printf("Element %d je izbrisan!\n", temp->num);
-		free(temp);
+		prev->next = p->next;
+		printf("Element %d je izbrisan!\n", p->num);
+		free(p);
 	}
-	return temp;
+
+	return p;
 }
