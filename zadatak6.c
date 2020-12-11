@@ -3,8 +3,6 @@
 #include<string.h>
 #include<time.h>
 
-/*Radna verzija, ne radi jos*/
-
 struct node;
 typedef struct node* position;
 struct node {
