@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-//radna verzija nije jos gotovo
-
 struct node;
 typedef struct node* position;
 struct node {
@@ -44,7 +42,7 @@ int main()
 	printf("Postfix izraz je: %s\n", expression);
 	evaluateExpression(&head, expression);
 	printNodes(head.next);
-	
+
 	return 0;
 }
 
@@ -85,7 +83,7 @@ int printNodes(position p) {
 		return -1;
 	}
 	else {
-		printf("Rezultat je: ");
+		printf("Rezultat postfix izraza je: ");
 		while (p != NULL) {
 			printf("%d\n", p->element);
 			p = p->next;
@@ -98,7 +96,7 @@ int fileSize(FILE* fp) {
 	int sizeOfBuffer = 0;
 
 	fseek(fp, 0, SEEK_END);
-	sizeOfBuffer = ftell(fp)+1;
+	sizeOfBuffer = ftell(fp) + 1;
 	rewind(fp);
 	printf("Velicina buffera u byteovima: %d\n", sizeOfBuffer);
 	return sizeOfBuffer;
@@ -113,24 +111,20 @@ char* createExpression(FILE* fp, int sizeOfFile) {
 }
 
 int evaluateExpression(position p, char* expression) {
-	int i, stringToNumber;
-	char operation;
+	char* current;
+	int result;
 
-	for (i = 0; i < strlen(expression); i++) {
-		if (isdigit(expression[i])) {
-			printf("%c je broj\n", expression[i]);
-			stringToNumber = (int)(expression[i]) - 48;
-			printf("%d pretvoren iz stringa u int!\n", stringToNumber);
-			push(p, stringToNumber);
-		}
-		else if (isspace(expression[i])) {
-			printf("Razmak\n");
+	current = strtok(expression, " ");
+	while (current != NULL) {
+		if (isdigit(*current)) {
+			printf("%c je stavljen na stack!\n", *current);
+			push(p, atoi(current));
 		}
 		else {
-			printf("%c je operator\n", expression[i]);
-			operation = expression[i];
-			calculateExpression(p, operation);
+			printf("%c je operator\n", *current);
+			calculateExpression(p, *current);
 		}
+		current = strtok(NULL, " ");
 	}
 }
 
@@ -159,6 +153,7 @@ int calculateExpression(position p, char operation) {
 	}
 	pop(p);
 	pop(p);
+	printf("Rezultat %d je stavljen na stack!\n", result);
 	push(p, result);
 	return result;
 }
