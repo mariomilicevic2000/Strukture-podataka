@@ -112,7 +112,6 @@ char* createExpression(FILE* fp, int sizeOfFile) {
 
 int evaluateExpression(position p, char* expression) {
 	char* current;
-	int result;
 
 	current = strtok(expression, " ");
 	while (current != NULL) {
