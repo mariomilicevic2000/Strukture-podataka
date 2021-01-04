@@ -3,7 +3,7 @@
 #include <string.h>
 #define MAXCHAR 256
 
-//nije jos gotovo
+//NIJE JOS GOTOVO
 
 struct tree;
 typedef struct tree* position;
