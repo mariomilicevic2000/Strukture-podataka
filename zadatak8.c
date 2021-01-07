@@ -153,8 +153,9 @@ int printContentsOfCurrentDirectory(position p) { //ispisuje sadrzaj direktorija
 }
 
 position makeNewDirectory(position p, char* dirName) { //radi novi direktorij, u ovisnosti je li prvi ili vec postoje drugi poddirektoriji
-	position temp, prev;
-
+	position temp, parentDir;
+	
+	parentDir = p;
 	temp = (position)malloc(sizeof(struct tree));
 	strcpy(temp->dir, dirName);
 	temp->sibling = NULL;
@@ -170,7 +171,7 @@ position makeNewDirectory(position p, char* dirName) { //radi novi direktorij, u
 			p = p->sibling;
 		}
 		p->sibling = temp;
-		temp->prevSibling = p;
+		temp->parent = parentDir;
 	}
 	return temp;
 }
