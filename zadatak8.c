@@ -118,14 +118,6 @@ position processAndSelectCommand(position p, char* input, nav stack) {
 	return current;
 }
 
-/*position changeDirectory(position p, char* dirName) {
-	p = p->child;
-	while (strcmp(p->sibling->dir, dirName) != 0) {
-		p = p->sibling;
-	}
-	return p;
-}*/
-
 position previousDirectory(position p) {
 	/*while (p->prevSibling != NULL) {
 		p = p->prevSibling;
