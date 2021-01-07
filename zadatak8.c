@@ -21,7 +21,6 @@ struct tree {
 	position sibling;
 	position child;
 	position parent;
-	position prevSibling;
 };
 
 struct stack;
