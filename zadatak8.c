@@ -39,7 +39,7 @@ position makeNewDirectory(position p, char* dirName); //rjeseno
 void deleteAll(position); //rjeseno
 //nav stackPush(nav);
 //nav stackPop(nav);
-int printStack(nav);
+//int printStack(nav);
 
 int main()
 {
