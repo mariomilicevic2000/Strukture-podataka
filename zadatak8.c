@@ -175,7 +175,7 @@ position makeNewDirectory(position p, char* dirName) { //radi novi direktorij, u
 	return temp;
 }
 
-nav stackPush(nav p, position d) {
+/*nav stackPush(nav p, position d) {
 	nav temp;
 
 	temp = (nav)malloc(sizeof(struct stack));
@@ -184,7 +184,7 @@ nav stackPush(nav p, position d) {
 	temp->directory = d;
 
 	return temp;
-}
+}*/
 
 /*nav stackPop(nav p) {
 	nav temp;
