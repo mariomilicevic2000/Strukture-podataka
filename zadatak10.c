@@ -4,11 +4,9 @@
 #include <ctype.h>
 #define MAXCHAR 256
 
-//NIJE GOTOVO
-
 struct tree;
 typedef struct tree* treePos;
-struct tree{
+struct tree {
 	char data[MAXCHAR];
 	treePos left;
 	treePos right;
@@ -16,119 +14,170 @@ struct tree{
 
 struct stack;
 typedef struct stack* stackPos;
-struct stack{
+struct stack {
 	treePos tree;
 	stackPos next;
 };
 
-int stackPush(stackPos); //rjeseno
-stackPos stackPop(stackPos); //rjeseno
-int treePush(treePos);
-int fileSize(FILE*); //rjeseno
-char* createExpression(FILE*, int); //rjeseno
-int isOperator(char*); //rjeseno
-int evaluateExpression(stackPos, char*);
-void printInOrder(treePos); //rjeseno
+stackPos stackPush(stackPos, treePos);
+treePos stackPop(stackPos);
+treePos createNode(char*);
+int fileSize(FILE*);
+char* createBuffer(FILE*, int); 
+int isOperator(char); 
+treePos evaluateExpression(char*);
+void printInOrder(treePos, char*); 
+treePos createSubTree(treePos, treePos, treePos);
 
-int main(){
-	FILE* fp;
+int main() {
+	FILE* fpIn;
+	FILE* fpOut;
 	int fileSizeCounter = 0;
-	char buffer[MAXCHAR] = {0};
+	char* buffer;
+	treePos root;
+	char* infix = (char*)calloc(fileSizeCounter + 10, sizeof(char));
 
-	fp = fopen("expression.txt", "r");
-	if(fp == NULL){
-		printf("File cannot be opened!\n");
+	fpIn = fopen("inFile.txt", "r");
+	if (fpIn == NULL) {
+		printf("Input file cannot be opened!\n");
 		return NULL;
 	}
-	fileSizeCounter = fileSize(fp);
-	buffer = createExpression(fp, fileSizeCounter);
-
-
+	fileSizeCounter = fileSize(fpIn);
+	buffer = createBuffer(fpIn, fileSizeCounter);
+	printf("Loaded postfix expression: %s\n\n", buffer);
+	root = evaluateExpression(buffer);
+	fclose(fpIn);
+	printInOrder(root, infix);
+	printf("\nProcessed infix expression: %s\n", infix);
+	fpOut = fopen("outFile.txt", "w");
+	if (fpOut == NULL) {
+		printf("Output file cannot be opened!\n");
+		return NULL;
+	}
+	fwrite(infix, 1, fileSizeCounter+1, fpOut);
+	fclose(fpOut);
 
 	return 0;
 }
 
-int stackPush(stackPos p){
+stackPos stackPush(stackPos p, treePos node) {
 	stackPos temp;
 
-	temp = (stackPos)malloc(sizeof(struct tree));
-	temp->tree = ;
+	if (p == NULL) {
+		printf("Invalid pointer in stack!\n");
+		return NULL;
+	}
+
+	temp = (stackPos)malloc(sizeof(struct stack));	
+	temp->tree = node;
 	temp->next = p->next;
 	p->next = temp;
-	return 0;
+
+	return p;
 }
 
-stackPos stackPop(stackPos p){
+treePos stackPop(stackPos p) {
 	stackPos temp;
+	treePos retVal;
 
-	if(p == NULL){
+	if (p == NULL) {
 		printf("Stack is empty!\n");
 		return NULL;
 	}
-	else{
+	else {
 		temp = p->next;
 		p->next = temp->next;
-		printf("Element %c popped off stack!\n", temp->tree->data);
+		retVal = temp->tree;
+		//printf("Element %s popped off stack!\n", temp->tree->data);
 		free(temp);
 	}
+	return retVal;
+}
+
+treePos createNode(char* data) {
+	treePos temp;
+
+	//printf("U createNode poslano: %s\n", data);
+	temp = (treePos)malloc(sizeof(struct tree));
+	temp->left = NULL;
+	temp->right = NULL;
+	strcpy(temp->data, data);
+	//printf("Stvoren node sa vrijednoscu: %s\n", temp->data);
+
 	return temp;
 }
 
-int treePush(treePos p, char* data){
-	treePos temp;
-
-	temp = (treePos)malloc(sizeof(struct tree));
-	temp->data = data;
-	temp->left = NULL;
-	temp->right = NULL;
-}
-
-int fileSize(FILE* fp){
+int fileSize(FILE* fp) {
 	int bufferSize = 0;
-	
+
 	fseek(fp, 0, SEEK_END);
-	bufferSize = ftell(fp)+1;
+	bufferSize = ftell(fp) + 1;
 	rewind(fp);
-	printf("Buffer size: %d\n", bufferSize);
+	//printf("Buffer size: %d\n", bufferSize);
 
 	return bufferSize;
 }
 
-char* createExpression(FILE* fp, int bufferSize){
-	char* expression;
+char* createBuffer(FILE* fp, int bufferSize) {
+	char* buffer;
 
-	expression = (char*)calloc(bufferSize, sizeof(char));
-	fread(expression, bufferSize, 1, fp);
-	return expression;
+	buffer = (char*)calloc(bufferSize, sizeof(char));
+	fread(buffer, bufferSize, 1, fp);
+
+	return buffer;
 }
 
-int isOperator(char ch){
-	if(ch == '+' || ch == '-' ||ch == '*' ||ch == '/')
+int isOperator(char ch) {
+	if (ch == '+' || ch == '-' || ch == '*' || ch == '/')
 		return 1;
 	else
 		return 0;
 }
 
-int evaluateExpression(stackPos p, char* expression){
+treePos evaluateExpression(char* expression) {
 	char* token;
+	treePos newNode, operatorNode,newTree, temp;
+	treePos NodeL, NodeR, stackTop;
+	struct stack stog;
+	treePos treeRoot = (treePos)malloc(sizeof(struct tree));
 
+	stog.next = NULL;
 	token = strtok(expression, " ");
-	while(token != NULL){
-		if(isOperator(*token)){
-			printf("%c je operator!\n", *token);
+	while (token != NULL) {
+		if (isdigit(*token)) {
+			//printf("%c je broj\n", *token);
+			newNode = createNode(token);
+			stackPush(&stog, newNode);
 		}
-		else{
-			printf("%c je broj", *token);
-			pushStack();
+		else if (isOperator(*token)) {
+			//printf("%c je operator!\n", *token);
+			operatorNode = createNode(token);
+			treeRoot = operatorNode;
+			NodeL = stackPop(&stog);
+			NodeR = stackPop(&stog);
+			createSubTree(operatorNode, NodeL, NodeR);
+			//printf("DJECA SU: %s i %s\n", treeRoot->left->data, treeRoot->right->data);
+			stackPush(&stog, treeRoot);
 		}
 		token = strtok(NULL, " ");
 	}
+	return treeRoot;
 }
 
-void printInOrder(treePos p){
-	if(p == NULL)
+void printInOrder(treePos p, char* string) {
+	if (p == NULL)
 		return;
-	printInOrder(p->left);
-	printf("%c", p);
-	printInOrder(p->right);
+	printInOrder(p->left, string);
+	printf("%s ", p->data);
+	strcat(string, " ");
+	strcat(string, p->data);
+	printInOrder(p->right, string);
+}
+
+treePos createSubTree(treePos operatorNode, treePos varNode1, treePos varNode2) {
+	operatorNode->left = varNode1;
+	operatorNode->right = varNode2;
+	//printf("Stvoreno je stablo: parent = %s, left = %s, right = %s\n", operatorNode->data, operatorNode->left->data, operatorNode->right->data);
+
+	return operatorNode;
 }
