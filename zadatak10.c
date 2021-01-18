@@ -23,10 +23,10 @@ stackPos stackPush(stackPos, treePos);
 treePos stackPop(stackPos);
 treePos createNode(char*);
 int fileSize(FILE*);
-char* createBuffer(FILE*, int); 
-int isOperator(char); 
+char* createBuffer(FILE*, int);
+int isOperator(char);
 treePos evaluateExpression(char*);
-void printInOrder(treePos, char*); 
+void printInOrder(treePos, char*);
 treePos createSubTree(treePos, treePos, treePos);
 
 int main() {
@@ -40,7 +40,7 @@ int main() {
 	fpIn = fopen("inFile.txt", "r");
 	if (fpIn == NULL) {
 		printf("Input file cannot be opened!\n");
-		return NULL;
+		return -1;
 	}
 	fileSizeCounter = fileSize(fpIn);
 	buffer = createBuffer(fpIn, fileSizeCounter);
@@ -52,9 +52,9 @@ int main() {
 	fpOut = fopen("outFile.txt", "w");
 	if (fpOut == NULL) {
 		printf("Output file cannot be opened!\n");
-		return NULL;
+		return -1;
 	}
-	fwrite(infix, 1, fileSizeCounter+1, fpOut);
+	fwrite(infix, 1, fileSizeCounter, fpOut);
 	fclose(fpOut);
 
 	return 0;
@@ -68,7 +68,7 @@ stackPos stackPush(stackPos p, treePos node) {
 		return NULL;
 	}
 
-	temp = (stackPos)malloc(sizeof(struct stack));	
+	temp = (stackPos)malloc(sizeof(struct stack));
 	temp->tree = node;
 	temp->next = p->next;
 	p->next = temp;
@@ -136,7 +136,7 @@ int isOperator(char ch) {
 
 treePos evaluateExpression(char* expression) {
 	char* token;
-	treePos newNode, operatorNode,newTree, temp;
+	treePos newNode, operatorNode, newTree, temp;
 	treePos NodeL, NodeR, stackTop;
 	struct stack stog;
 	treePos treeRoot = (treePos)malloc(sizeof(struct tree));
